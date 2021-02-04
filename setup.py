@@ -4,6 +4,7 @@
 from __future__ import print_function
 
 import os
+import re
 import sys
 import fnmatch
 from os.path import join
@@ -123,9 +124,9 @@ if build_ext is not None:
                 cxfreeze_searchpath.insert(0, self.build_lib)
     extra_kwargs['cmdclass'] = {"build_ext": MyBuildExt}
 
-    ext_modules = [Extension("cpartition", ["liam2/cpartition.pyx"],
+    ext_modules = [Extension("liam2.cpartition", ["liam2/cpartition.pyx"],
                              include_dirs=[np.get_include()]),
-                   Extension("cutils", ["liam2/cutils.pyx"],
+                   Extension("liam2.cutils", ["liam2/cutils.pyx"],
                              include_dirs=[np.get_include()])]
     extra_kwargs['ext_modules'] = ext_modules
     options["build_ext"] = {}
@@ -165,7 +166,7 @@ if build_exe:
         # strip paths in __file__ attributes
         "replace_paths": [("*", "")],
 
-        "includes": ["matplotlib.backends.backend_qt4agg"],
+        "includes": ["matplotlib.backends.backend_qt4agg", "matplotlib.backends.backend_qt5agg"],
         "packages": ["vitables.plugins"],
         # matplotlib => calendar, distutils, unicodedata
         # matplotlib.backends.backend_tkagg => Tkconstants, Tkinter
@@ -190,8 +191,16 @@ if build_exe:
 # main stuff #
 # ========== #
 
-execfile('./liam2/version.py')
-# now we have a `__version__` variable
+def get_version(filepath):
+    with open(filepath, 'r') as f:
+        for line in f:
+            m = re.match('__version__ = "([^"]+)"\s*', line)
+            if m:
+                return m.group(1)
+        return None
+
+
+version = get_version('./liam2/version.py')
 
 
 classifiers = [
@@ -209,7 +218,7 @@ classifiers = [
 setup(
     name="liam2",
     # cx_freeze wants only ints and dots (full version number)
-    version=int_version(__version__),
+    version=int_version(version),
     author="Gaëtan de Menten",
     author_email="gdementen@gmail.com",
     url="http://liam2.plan.be",
@@ -226,15 +235,17 @@ setup(
     install_requires=[
         # not specifying cython here because we need it to be installed
         # *before* this script executes, if we want it to be of any use.
+        'larray',
         'numexpr',
-        'numpy >= 1.8',
-        'tables >= 3',
+        'numpy',
+        'tables',
         'pyyaml',
     ],
     extras_require=dict(
         interpolation=['bcolz'],
         plot=['matplotlib'],
         view=['vitables'],
+        test=['flake8','nose','matplotlib'],
     ),
     **extra_kwargs
 )
