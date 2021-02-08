@@ -206,13 +206,13 @@ version = get_version('./liam2/version.py')
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "Intended Audience :: Science / Research",
+    "Intended Audience :: Science/Research",
     "Intended Audience :: Financial and Insurance Industry",
     "Intended Audience :: Healthcare Industry",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
-    "Topic :: Scientific / Engineering",
+    "Topic :: Scientific/Engineering",
 ]
 
 setup(
@@ -224,7 +224,7 @@ setup(
     url="http://liam2.plan.be",
     license='GNU General Public License v3 (GPLv3)',
     description="Microsimulation platform",
-    long_description=read_local('README.rst'),
+    # long_description=read_local('README.rst'),
     classifiers=classifiers,
     options=options,
     packages=['liam2'],
