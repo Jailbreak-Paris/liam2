@@ -27,7 +27,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: wheels
-          path: ./wheelhouse/*.whl
+          path: ./wheelhouse/*.whl  # get artifacts from wheelhouse dir
 
 
   pypi_push:
@@ -40,7 +40,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: wheels
-          path: wheelhouse/
+          path: wheelhouse/  # put collected artifacts to wheelhouse dir
 
       - name: Publish distribution 📦 to Test PyPI
         uses: pypa/gh-action-pypi-publish@master
