@@ -26,13 +26,22 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
+          name: wheels
           path: ./wheelhouse/*.whl
+
 
   pypi_push:
     name: Publish to Test PyPI
     needs: build_wheels
     runs-on: ubuntu-20.04
     steps:
+
+      - name: Download wheels artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: wheels
+          path: wheelhouse/
+
       - name: Publish distribution 📦 to Test PyPI
         uses: pypa/gh-action-pypi-publish@master
         with:
