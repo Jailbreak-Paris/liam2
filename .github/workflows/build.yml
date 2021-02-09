@@ -8,20 +8,21 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, windows-2019, macos-10.15]
+        os: [ubuntu-20.04, windows-2019]
 
     steps:
       - uses: actions/checkout@v2
 
-      # - name: Install Visual C++ for Python 2.7
-      #   if: runner.os == 'Windows'
-      #   run: choco install vcpython27 -f -y
+      - name: Install Visual C++ for Python 2.7
+        if: runner.os == 'Windows'
+        run: choco install vcpython27 -f -y
 
       - name: Build wheels
         uses: joerick/cibuildwheel@v1.9.0
         # to supply options, put them in 'env', like:
-        # env:
-        #   CIBW_SOME_OPTION: value
+        env:
+          CIBW_BUILD: cp3*-manylinux* cp3*-win*
+          CIBW_BEFORE_BUILD: pip install -r requirements-dist.in
 
       - uses: actions/upload-artifact@v2
         with:
