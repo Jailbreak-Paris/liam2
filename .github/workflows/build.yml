@@ -30,6 +30,7 @@ jobs:
 
   pypi_push:
     name: Publish to Test PyPI
+    needs: build_wheels
     runs-on: ubuntu-20.04
     steps:
       - name: Publish distribution 📦 to Test PyPI
